@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - "assets/site-support.css"
+      - "assets/site-support.js"
       - "index.html"
       - "style.css"
       - "scripts/**"
@@ -11,6 +13,8 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - "assets/site-support.css"
+      - "assets/site-support.js"
       - "index.html"
       - "style.css"
       - "scripts/**"
