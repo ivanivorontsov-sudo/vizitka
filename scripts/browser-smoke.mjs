@@ -1,0 +1,41 @@
+#!/usr/bin/env node
+import { chromium } from "playwright";
+const BASE = process.env.SITE_URL || "http://127.0.0.1:8767";
+const errors = [];
+const browser = await chromium.launch({ headless: true });
+const page = await browser.newPage({ viewport: { width: 1365, height: 900 } });
+page.on("pageerror", e => errors.push(e.message));
+const response = await page.goto(BASE + "/", { waitUntil: "domcontentloaded" });
+if (!response || response.status() >= 400) errors.push("Portfolio page failed to load.");
+await page.waitForSelector("#q");
+const initial = await page.locator(".card:visible").count();
+const schema = await page.locator('script[type="application/ld+json"]').first().textContent();
+const parsed = JSON.parse(schema);
+const schemaCount = parsed.mainEntity?.numberOfItems;
+const schemaItems = parsed.mainEntity?.itemListElement?.length;
+if (initial !== 68) errors.push("Expected 68 visible project cards, found " + initial);
+if (schemaCount !== initial || schemaItems !== initial) errors.push("JSON-LD count (" + schemaCount + "/" + schemaItems + ") differs from visible cards (" + initial + ").");
+if ((await page.locator("#cnt").innerText()).trim() !== String(initial)) errors.push("Visible project counter does not match cards.");
+await page.locator("#q").fill("матрёшка");
+if (await page.locator(".card:visible").count() !== 1) errors.push("Search should return exactly the Matryoshka card.");
+await page.locator("#q").fill("no-such-project-987");
+if (await page.locator(".card:visible").count() !== 0) errors.push("Search for an absent project should return no cards.");
+if (await page.locator("#empty").evaluate(el => getComputedStyle(el).display === "none")) errors.push("Empty-state message is not shown for zero results.");
+await page.locator("#q").fill("");
+const androidChip = page.locator(".chip[data-c='android']");
+if (await androidChip.count()) {
+  await androidChip.click();
+  if (await page.locator(".card:visible").count() === 0) errors.push("Android category filter returned no cards.");
+  if ((await androidChip.getAttribute("aria-pressed")) !== "true") errors.push("Selected category does not expose aria-pressed=true.");
+  await page.locator(".chip[data-c='all']").click();
+}
+await page.locator("#theme").click();
+if (!(await page.locator("html").getAttribute("data-theme"))) errors.push("Theme toggle did not set a theme.");
+await page.setViewportSize({ width: 390, height: 844 });
+const width = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
+if (width.scroll > width.viewport + 2) errors.push("Horizontal overflow at 390px: " + width.scroll + "/" + width.viewport);
+await browser.close();
+console.log("Portfolio browser checks: " + initial + " cards, search, category, theme, JSON-LD and mobile layout.");
+console.log("Errors: " + errors.length);
+for (const error of errors) console.error("ERROR:", error);
+if (errors.length) process.exitCode = 1;
