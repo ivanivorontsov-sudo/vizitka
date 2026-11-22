@@ -13,7 +13,7 @@ const schema = await page.locator('script[type="application/ld+json"]').first().
 const parsed = JSON.parse(schema);
 const schemaCount = parsed.mainEntity?.numberOfItems;
 const schemaItems = parsed.mainEntity?.itemListElement?.length;
-if (initial !== 68) errors.push("Expected 68 visible project cards, found " + initial);
+if (initial !== 70) errors.push("Expected 70 visible project cards, found " + initial);
 if (schemaCount !== initial || schemaItems !== initial) errors.push("JSON-LD count (" + schemaCount + "/" + schemaItems + ") differs from visible cards (" + initial + ").");
 if ((await page.locator("#cnt").innerText()).trim() !== String(initial)) errors.push("Visible project counter does not match cards.");
 await page.locator("#q").fill("матрёшка");
