@@ -21,8 +21,9 @@ const staticHtml = html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<sty
 if ((staticHtml.match(/<h1\b/gi) || []).length !== 1) fail("expected exactly one static h1");
 
 for (const property of ["og:title", "og:description", "og:url", "og:image"]) {
-  const pattern = new RegExp("<meta[^>]+property=[\\"']" + property + "[\\"']", "i");
-  if (!pattern.test(html)) fail("missing " + property);
+  const doubleQuoted = 'property="' + property + '"';
+  const singleQuoted = "property='" + property + "'";
+  if (!html.includes(doubleQuoted) && !html.includes(singleQuoted)) fail("missing " + property);
 }
 if (html.indexOf("https://ivanivorontsov-sudo.github.io/og-cover.png") < 0) fail("missing social preview image URL");
 
