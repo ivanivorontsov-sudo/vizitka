@@ -1,5 +1,12 @@
 # vizitka
 
+Опубликованная визитка: https://ivanivorontsov-sudo.github.io/vizitka/
+
+Главный сайт: https://ivanivorontsov-sudo.github.io/
+Каталог отдельных страниц проектов: https://ivanivorontsov-sudo.github.io/projects/
+Статья о браузерной мастерской: https://ivanivorontsov-sudo.github.io/articles/local-browser-workshop/
+
+
 Исходные файлы проекта находятся в этом репозитории. Изучайте их и проверяйте перед использованием.
 
 

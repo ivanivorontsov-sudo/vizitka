@@ -31,6 +31,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Audit portfolio SEO metadata and structured data
+        run: node scripts/seo-audit.mjs
       - name: Install Playwright
         run: |
           npm install --no-save playwright
