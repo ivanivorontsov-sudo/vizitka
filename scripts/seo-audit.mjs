@@ -49,7 +49,7 @@ const pages = [
 
 for (const page of pages) {
   const html = fs.readFileSync(new URL(page.file, import.meta.url), "utf8");
-  const titleMatches = [...html.matchAll(/<title\\b[^>]*>([\\s\\S]*?)<\\/title>/gi)];
+  const titleMatches = [...html.matchAll(/<title\b[^>]*>([\s\S]*?)<\/title>/gi)];
   const title = titleMatches[0]?.[1]?.replace(/<[^>]*>/g, "").trim() ?? "";
   const descriptions = getMeta(html, "name", "description");
   const robots = getMeta(html, "name", "robots");
