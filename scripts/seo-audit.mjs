@@ -49,11 +49,8 @@ const pages = [
 
 for (const page of pages) {
   const html = fs.readFileSync(new URL(page.file, import.meta.url), "utf8");
-  const titleTags = getTags(html, "title");
-  const title = titleTags[0]
-    ?.replace(/^<title[^>]*>/i, "")
-    .replace(/<\/title>$/i, "")
-    .trim() ?? "";
+  const titleMatches = [...html.matchAll(/<title\\b[^>]*>([\\s\\S]*?)<\\/title>/gi)];
+  const title = titleMatches[0]?.[1]?.replace(/<[^>]*>/g, "").trim() ?? "";
   const descriptions = getMeta(html, "name", "description");
   const robots = getMeta(html, "name", "robots");
   const ogUrl = getMeta(html, "property", "og:url");
@@ -63,7 +60,7 @@ for (const page of pages) {
   const staticHtml = html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "");
   const h1Count = (staticHtml.match(/<h1\b/gi) || []).length;
 
-  if (titleTags.length !== 1 || !title) {
+  if (titleMatches.length !== 1 || !title) {
     fail(page.file + ": expected exactly one non-empty title");
   } else if (title.length < 15 || title.length > 80) {
     fail(page.file + ": title length " + title.length + " is outside 15..80");
