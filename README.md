@@ -8,7 +8,7 @@ English portfolio: https://ivanivorontsov-sudo.github.io/vizitka/en/
 
 Главный сайт: https://ivanivorontsov-sudo.github.io/
 Английская версия: https://ivanivorontsov-sudo.github.io/vizitka/en/
-Актуальная исследовательская редакция AEFH: https://ivanivorontsov-sudo.github.io/aefh/v7.4/
+Актуальная исследовательская редакция AEFH: https://ivanivorontsov-sudo.github.io/aefh/v7.4/\nКороткие доказательства (RU): https://ivanivorontsov-sudo.github.io/proofs/\nShort Proofs (EN): https://ivanivorontsov-sudo.github.io/en/proofs/
 Каталог отдельных страниц проектов: https://ivanivorontsov-sudo.github.io/projects/
 Статья о браузерной мастерской: https://ivanivorontsov-sudo.github.io/articles/local-browser-workshop/
 
