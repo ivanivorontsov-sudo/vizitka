@@ -13,11 +13,11 @@ const schema = await page.locator('script[type="application/ld+json"]').first().
 const parsed = JSON.parse(schema);
 const schemaCount = parsed.mainEntity?.numberOfItems;
 const schemaItems = parsed.mainEntity?.itemListElement?.length;
-if (initial !== 70) errors.push("Expected 70 visible project cards, found " + initial);
+if (initial !== 79) errors.push("Expected 79 visible project cards, found " + initial);
 if (schemaCount !== initial || schemaItems !== initial) errors.push("JSON-LD count (" + schemaCount + "/" + schemaItems + ") differs from visible cards (" + initial + ").");
 if ((await page.locator("#cnt").innerText()).trim() !== String(initial)) errors.push("Visible project counter does not match cards.");
 await page.locator("#q").fill("матрёшка");
-if (await page.locator(".card:visible").count() !== 1) errors.push("Search should return exactly the Matryoshka card.");
+if (await page.locator(".card:visible").count() !== 2) errors.push("Search should return both Matryoshka OS cards.");
 await page.locator("#q").fill("no-such-project-987");
 if (await page.locator(".card:visible").count() !== 0) errors.push("Search for an absent project should return no cards.");
 if (await page.locator("#empty").evaluate(el => getComputedStyle(el).display === "none")) errors.push("Empty-state message is not shown for zero results.");
@@ -31,9 +31,20 @@ if (await androidChip.count()) {
 }
 await page.locator("#theme").click();
 if (!(await page.locator("html").getAttribute("data-theme"))) errors.push("Theme toggle did not set a theme.");
-await page.setViewportSize({ width: 390, height: 844 });
-const width = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
-if (width.scroll > width.viewport + 2) errors.push("Horizontal overflow at 390px: " + width.scroll + "/" + width.viewport);
+for (const viewportWidth of [390, 360, 320]) {
+  await page.setViewportSize({ width: viewportWidth, height: 844 });
+  const width = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
+  if (width.scroll > width.viewport + 2) errors.push("Horizontal overflow at " + viewportWidth + "px: " + width.scroll + "/" + width.viewport);
+  const header = await page.locator("header .wrap").evaluate(el => ({
+    children: [...el.children].map(child => {
+      const r = child.getBoundingClientRect();
+      return { left: r.left, right: r.right };
+    })
+  }));
+  if (header.children.some(child => child.left < -2 || child.right > viewportWidth + 2)) {
+    errors.push("A header item is clipped at " + viewportWidth + "px.");
+  }
+}
 await browser.close();
 console.log("Portfolio browser checks: " + initial + " cards, search, category, theme, JSON-LD and mobile layout.");
 console.log("Errors: " + errors.length);
