@@ -45,6 +45,24 @@ for (const viewportWidth of [390, 360, 320]) {
     errors.push("A header item is clipped at " + viewportWidth + "px.");
   }
 }
+await page.goto(BASE + "/en/", { waitUntil: "domcontentloaded" });
+if (!(await page.locator("h1").count())) errors.push("English portfolio has no H1.");
+if ((await page.locator("html").getAttribute("lang")) !== "en") errors.push("English portfolio lang attribute is not en.");
+if (!(await page.title()).includes("Ivan Vorontsov")) errors.push("English portfolio document title is unexpected.");
+if (!(await page.locator('a[href*="/en/proofs/"]').count())) errors.push("English portfolio is missing the Short Proofs link.");
+if (!(await page.locator('a[href*="/en/research/aefh-v7-4/"]').count())) errors.push("English portfolio is missing the current AEFH v7.4 link.");
+for (const viewportWidth of [390, 360, 320]) {
+  await page.setViewportSize({ width: viewportWidth, height: 844 });
+  const width = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
+  if (width.scroll > width.viewport + 2) errors.push("English portfolio horizontal overflow at " + viewportWidth + "px: " + width.scroll + "/" + width.viewport);
+  const headerItems = await page.locator("header .wrap").evaluate(el => [...el.children].map(child => {
+    const rect = child.getBoundingClientRect();
+    return { left: rect.left, right: rect.right };
+  }));
+  if (headerItems.some(item => item.left < -2 || item.right > viewportWidth + 2)) {
+    errors.push("English portfolio header is clipped at " + viewportWidth + "px.");
+  }
+}
 await browser.close();
 console.log("Portfolio browser checks: " + initial + " cards, search, category, theme, JSON-LD and mobile layout.");
 console.log("Errors: " + errors.length);
