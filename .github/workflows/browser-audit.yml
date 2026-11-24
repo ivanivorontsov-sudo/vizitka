@@ -7,6 +7,7 @@ on:
       - "assets/site-support.css"
       - "assets/site-support.js"
       - "index.html"
+      - "en/index.html"
       - "style.css"
       - "scripts/**"
       - ".github/workflows/browser-audit.yml"
