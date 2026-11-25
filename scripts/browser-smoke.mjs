@@ -50,7 +50,7 @@ if (!(await page.locator("h1").count())) errors.push("English portfolio has no H
 if ((await page.locator("html").getAttribute("lang")) !== "en") errors.push("English portfolio lang attribute is not en.");
 if (!(await page.title()).includes("Ivan Vorontsov")) errors.push("English portfolio document title is unexpected.");
 if (!(await page.locator('a[href*="/en/proofs/"]').count())) errors.push("English portfolio is missing the Short Proofs link.");
-if (!(await page.locator('a[href*="/en/research/aefh-v7-4/"]').count())) errors.push("English portfolio is missing the current AEFH v7.4 link.");
+if (!(await page.locator('a[href*="/en/research/aefh-v7-5/"]').count())) errors.push("English portfolio is missing the current AEFH v7.5 link.");
 for (const viewportWidth of [390, 360, 320]) {
   await page.setViewportSize({ width: viewportWidth, height: 844 });
   const width = await page.evaluate(() => ({ viewport: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
