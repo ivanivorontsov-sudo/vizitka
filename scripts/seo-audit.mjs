@@ -36,14 +36,14 @@ const pages = [
     language: "ru",
     canonical: BASE + "/vizitka/",
     proofUrl: BASE + "/proofs/",
-    researchUrl: BASE + "/aefh/v7.4/"
+    researchUrl: BASE + "/aefh/v7.5/"
   },
   {
     file: "../en/index.html",
     language: "en",
     canonical: BASE + "/vizitka/en/",
     proofUrl: BASE + "/en/proofs/",
-    researchUrl: BASE + "/en/research/aefh-v7-4/"
+    researchUrl: BASE + "/en/research/aefh-v7-5/"
   }
 ];
 
@@ -100,7 +100,7 @@ for (const page of pages) {
 
   if (h1Count !== 1) fail(page.file + ": expected exactly one static H1, found " + h1Count);
   if (!html.includes(page.proofUrl)) fail(page.file + ": missing matching Short Proofs link");
-  if (!html.includes(page.researchUrl)) fail(page.file + ": missing current AEFH v7.4 link");
+  if (!html.includes(page.researchUrl)) fail(page.file + ": missing current AEFH v7.5 link");
 
   const alternateLinks = getLinks(html, item =>
     (item.rel || "").toLowerCase().split(/\s+/).includes("alternate") && !!item.hreflang
